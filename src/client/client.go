@@ -10,8 +10,8 @@ import (
 )
 
 func shovel(con net.Conn) {
-	origin := "http://localhost/"
-	url := "ws://localhost:8080/ssh"
+	origin := "https://ssh-sample.cfapps.io:4443/"
+	url := "wss://ssh-sample.cfapps.io:4443/ssh"
 	ws, err := websocket.Dial(url, "", origin)
 	if err != nil {
 		log.Fatal(err)

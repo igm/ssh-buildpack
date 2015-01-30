@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -22,10 +23,12 @@ func main() {
 		cmd.Wait()
 	}()
 	http.Handle("/ssh", websocket.Handler(shovel))
+	http.HandleFunc("/env", handlerEnv)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
+	fmt.Println("Listening on port:", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
@@ -41,6 +44,6 @@ func shovel(ws *websocket.Conn) {
 	io.Copy(conn, ws)
 }
 
-func handler(rw http.ResponseWriter, req *http.Request) {
-	rw.Write([]byte("ok"))
+func handlerEnv(rw http.ResponseWriter, req *http.Request) {
+	json.NewEncoder(rw).Encode(os.Environ())
 }
